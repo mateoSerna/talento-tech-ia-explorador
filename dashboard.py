@@ -198,8 +198,8 @@ def filter_df(cities, tipos, include_zero):
 sidebar = html.Div([
     html.Div([
         html.Div("📊", style={'fontSize':'28px'}),
-        html.H5("Dashboard EDA", style={'margin':'0','fontWeight':'700','color':'white'}),
-        html.Small("Análisis Exploratorio", style={'color':'#94A3B8'}),
+        html.H5("MACROMAKERS", style={'margin':'0','fontWeight':'800','color':'white','letterSpacing':'2px'}),
+        html.Small("Talento Tech IA — Nivel Explorador", style={'color':'#94A3B8','fontSize':'10px'}),
     ], style={'marginBottom':'24px'}),
     html.Label("Ciudad", style={'fontWeight':'600','fontSize':'11px','color':'#94A3B8','textTransform':'uppercase','letterSpacing':'.5px'}),
     dcc.Dropdown(id='filter-ciudad', options=[{'label':c,'value':c} for c in ALL_CITIES],
@@ -211,7 +211,7 @@ sidebar = html.Div([
     dbc.Switch(id='filter-zero', label='Incluir inactivas', value=False, style={'marginBottom':'24px','fontSize':'12px','color':'white'}),
     html.Hr(style={'borderColor':'#334155'}),
     html.Div(id='sidebar-stats'),
-], style={'width':'210px','minHeight':'100vh','background':'#1E293B','padding':'24px 14px',
+], className='sidebar', style={'width':'210px','minHeight':'100vh','background':'#1E293B','padding':'24px 14px',
           'position':'fixed','top':0,'left':0,'zIndex':1000,'overflowY':'auto'})
 
 # ─── TABS ────────────────────────────────────────────────────────────────────
@@ -228,11 +228,15 @@ tabs = dcc.Tabs(id='main-tabs', value='tab-resumen', children=[
 ], style={'background':COLORS['card'],'borderBottom':f'1px solid {COLORS["border"]}','paddingLeft':'8px'})
 
 app.layout = html.Div([
+    html.Div([
+        html.Span("MACROMAKERS"),
+        html.Span("Talento Tech IA — Nivel Explorador", style={'fontSize':'11px','fontWeight':'400','color':'#94A3B8','marginLeft':'10px','letterSpacing':'0.5px'}),
+    ], className='mobile-topbar'),
     sidebar,
     html.Div([
         tabs,
-        html.Div(id='tab-content', style={'padding':'24px','minHeight':'80vh'}),
-    ], style={'marginLeft':'210px','background':COLORS['bg'],'minHeight':'100vh'}),
+        html.Div(id='tab-content', className='tab-content-inner', style={'padding':'24px','minHeight':'80vh'}),
+    ], className='main-content', style={'marginLeft':'210px','background':COLORS['bg'],'minHeight':'100vh'}),
 ], style={'fontFamily':'Inter, Arial, sans-serif'})
 
 # ─── SIDEBAR STATS ───────────────────────────────────────────────────────────
@@ -272,7 +276,7 @@ def kpi(title, value, sub, color):
         html.Div(title, style={'fontSize':'10px','fontWeight':'600','color':COLORS['muted'],'textTransform':'uppercase','letterSpacing':'.5px','marginBottom':'4px'}),
         html.Div(value, style={'fontSize':'24px','fontWeight':'700','color':color,'lineHeight':'1.1'}),
         html.Div(sub,   style={'fontSize':'10px','color':COLORS['muted'],'marginTop':'3px'}),
-    ], style=card_style(color)), width=3, style={'padding':'6px'})
+    ], style=card_style(color)), xs=6, md=3, style={'padding':'6px'})
 
 def tab_resumen(d, da):
     total   = da['Total_anual'].sum()
@@ -316,11 +320,19 @@ def tab_resumen(d, da):
         textinfo='label+percent', textfont_size=11))
     fig_layout(f_tipo,'👥 Por Tipo de Cliente',280)
 
-    return html.Div([kpis,
-        dbc.Row([dbc.Col(dcc.Graph(figure=f_bar, config={'displayModeBar':False}),width=7),
-                 dbc.Col(dcc.Graph(figure=f_pie, config={'displayModeBar':False}),width=5)],style={'marginBottom':'12px'}),
-        dbc.Row([dbc.Col(dcc.Graph(figure=f_line,config={'displayModeBar':False}),width=8),
-                 dbc.Col(dcc.Graph(figure=f_tipo,config={'displayModeBar':False}),width=4)])])
+    header = html.Div([
+        html.H2("Resúmen Principal", style={
+            'fontWeight':'800','letterSpacing':'3px','color':COLORS['text'],
+            'marginBottom':'2px','fontSize':'clamp(20px, 4vw, 32px)',
+        }),
+        html.Div("Análisis Exploratorio de Datos", style={'color':COLORS['muted'],'fontSize':'13px','marginBottom':'20px'}),
+    ])
+
+    return html.Div([header, kpis,
+        dbc.Row([dbc.Col(dcc.Graph(figure=f_bar, config={'displayModeBar':False}),xs=12, md=7),
+                 dbc.Col(dcc.Graph(figure=f_pie, config={'displayModeBar':False}),xs=12, md=5)],style={'marginBottom':'12px'}),
+        dbc.Row([dbc.Col(dcc.Graph(figure=f_line,config={'displayModeBar':False}),xs=12, md=8),
+                 dbc.Col(dcc.Graph(figure=f_tipo,config={'displayModeBar':False}),xs=12, md=4)])])
 
 # ══════════════════════════════════════════════════════════════════════════════
 # TAB 2 — EXPLORADOR X/Y
@@ -342,8 +354,8 @@ def tab_explorador():
                          value='scatter', inline=True, labelStyle={'marginRight':'14px'},
                          style={'fontSize':'12px'})],width=6),
         ],style={'background':COLORS['card'],'padding':'16px','borderRadius':'12px','border':f'1px solid {COLORS["border"]}','marginBottom':'16px'}),
-        dbc.Row([dbc.Col(dcc.Graph(id='exp-graph',config={'displayModeBar':False}),width=8),
-                 dbc.Col(dcc.Graph(id='exp-hist', config={'displayModeBar':False}),width=4)]),
+        dbc.Row([dbc.Col(dcc.Graph(id='exp-graph',config={'displayModeBar':False}),xs=12, md=8),
+                 dbc.Col(dcc.Graph(id='exp-hist', config={'displayModeBar':False}),xs=12, md=4)]),
         html.Div(id='exp-interp',style={'marginTop':'12px'}),
     ])
 
@@ -483,8 +495,8 @@ def tab_heatmap(da):
     ],style={**card_style(COLORS['secondary']),'marginTop':'16px'})
 
     return html.Div([
-        dbc.Row([dbc.Col(dcc.Graph(figure=fhm,config={'displayModeBar':False}),width=6),
-                 dbc.Col(dcc.Graph(figure=fpc,config={'displayModeBar':False}),width=6)]),
+        dbc.Row([dbc.Col(dcc.Graph(figure=fhm,config={'displayModeBar':False}),xs=12, md=6),
+                 dbc.Col(dcc.Graph(figure=fpc,config={'displayModeBar':False}),xs=12, md=6)]),
         interp])
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -552,10 +564,10 @@ def cb_regresion(tab, xcols, cities, tipos, inc_zero):
         html.Div("📐 Ecuación",style={'fontWeight':'700','fontSize':'13px','marginBottom':'8px'}),
         html.Code(eq,style={'fontSize':'12px','background':'#F1F5F9','padding':'8px 12px','borderRadius':'6px','display':'block','wordBreak':'break-all'}),
         dbc.Row([
-            dbc.Col(html.Div([html.Div("R²",style={'fontSize':'11px','color':COLORS['muted']}),html.Div(f"{r2:.4f}",style={'fontSize':'22px','fontWeight':'700','color':COLORS['primary']})],style=card_style()),width=3),
-            dbc.Col(html.Div([html.Div("R² Ajust.",style={'fontSize':'11px','color':COLORS['muted']}),html.Div(f"{r2a:.4f}",style={'fontSize':'22px','fontWeight':'700','color':COLORS['secondary']})],style=card_style()),width=3),
-            dbc.Col(html.Div([html.Div("RMSE",style={'fontSize':'11px','color':COLORS['muted']}),html.Div(fmt_cop(rmse),style={'fontSize':'22px','fontWeight':'700','color':COLORS['warning']})],style=card_style()),width=3),
-            dbc.Col(html.Div([html.Div("n",style={'fontSize':'11px','color':COLORS['muted']}),html.Div(str(n),style={'fontSize':'22px','fontWeight':'700','color':COLORS['success']})],style=card_style()),width=3),
+            dbc.Col(html.Div([html.Div("R²",style={'fontSize':'11px','color':COLORS['muted']}),html.Div(f"{r2:.4f}",style={'fontSize':'22px','fontWeight':'700','color':COLORS['primary']})],style=card_style()),xs=6, md=3),
+            dbc.Col(html.Div([html.Div("R² Ajust.",style={'fontSize':'11px','color':COLORS['muted']}),html.Div(f"{r2a:.4f}",style={'fontSize':'22px','fontWeight':'700','color':COLORS['secondary']})],style=card_style()),xs=6, md=3),
+            dbc.Col(html.Div([html.Div("RMSE",style={'fontSize':'11px','color':COLORS['muted']}),html.Div(fmt_cop(rmse),style={'fontSize':'22px','fontWeight':'700','color':COLORS['warning']})],style=card_style()),xs=6, md=3),
+            dbc.Col(html.Div([html.Div("n",style={'fontSize':'11px','color':COLORS['muted']}),html.Div(str(n),style={'fontSize':'22px','fontWeight':'700','color':COLORS['success']})],style=card_style()),xs=6, md=3),
         ],style={'marginTop':'12px'}),
     ],style={**card_style(COLORS['primary']),'marginBottom':'16px'})
 
@@ -567,8 +579,8 @@ def cb_regresion(tab, xcols, cities, tipos, inc_zero):
                       style={**card_style(COLORS['success']),'marginTop':'16px'})
 
     return html.Div([eq_card,
-        dbc.Row([dbc.Col(dcc.Graph(figure=fig,  config={'displayModeBar':False}),width=7),
-                 dbc.Col(dcc.Graph(figure=fcoef,config={'displayModeBar':False}),width=5)]),
+        dbc.Row([dbc.Col(dcc.Graph(figure=fig,  config={'displayModeBar':False}),xs=12, md=7),
+                 dbc.Col(dcc.Graph(figure=fcoef,config={'displayModeBar':False}),xs=12, md=5)]),
         dcc.Graph(figure=fres,config={'displayModeBar':False}), interp])
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -580,9 +592,9 @@ def tab_kmeans():
         html.P("Segmenta empresas por perfil de ventas. El codo y la silueta ayudan a elegir K.",style={'color':COLORS['muted'],'fontSize':'12px','marginBottom':'12px'}),
         dbc.Row([
             dbc.Col([html.Label("K máximo para el codo",style={'fontWeight':'600','fontSize':'12px','color':COLORS['muted']}),
-                     dcc.Slider(id='km-kmax',min=3,max=12,step=1,value=8,marks={i:str(i) for i in range(3,13)},tooltip={'placement':'bottom'})],width=6),
+                     dcc.Slider(id='km-kmax',min=3,max=12,step=1,value=8,marks={i:str(i) for i in range(3,13)},tooltip={'placement':'bottom'})],xs=12, md=6),
             dbc.Col([html.Label("K elegido",style={'fontWeight':'600','fontSize':'12px','color':COLORS['muted']}),
-                     dcc.Slider(id='km-k',  min=2,max=10,step=1,value=3,marks={i:str(i) for i in range(2,11)}, tooltip={'placement':'bottom'})],width=6),
+                     dcc.Slider(id='km-k',  min=2,max=10,step=1,value=3,marks={i:str(i) for i in range(2,11)}, tooltip={'placement':'bottom'})],xs=12, md=6),
         ],style={'background':COLORS['card'],'padding':'16px 24px','borderRadius':'12px','border':f'1px solid {COLORS["border"]}','marginBottom':'16px'}),
         html.Div(id='km-output'),
     ])
@@ -657,8 +669,8 @@ def cb_kmeans(tab, kmax, k, cities, tipos, inc_zero):
     ],style={**card_style(COLORS['secondary']),'marginTop':'16px'})
 
     return html.Div([
-        dbc.Row([dbc.Col(dcc.Graph(figure=felbow,config={'displayModeBar':False}),width=5),
-                 dbc.Col(dcc.Graph(figure=fsc,   config={'displayModeBar':False}),width=7)]),
+        dbc.Row([dbc.Col(dcc.Graph(figure=felbow,config={'displayModeBar':False}),xs=12, md=5),
+                 dbc.Col(dcc.Graph(figure=fsc,   config={'displayModeBar':False}),xs=12, md=7)]),
         html.H6("Perfil por cluster",style={'fontWeight':'700','margin':'16px 0 6px'}),
         table, interp])
 
