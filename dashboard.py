@@ -199,7 +199,8 @@ sidebar = html.Div([
     html.Div([
         html.Div("📊", style={'fontSize':'28px'}),
         html.H5("MACROMAKERS", style={'margin':'0','fontWeight':'800','color':'white','letterSpacing':'2px'}),
-        html.Small("Talento Tech IA — Nivel Explorador", style={'color':'#94A3B8','fontSize':'10px'}),
+        html.Small("Talento Tech IA — Nivel Explorador", style={'color':'#94A3B8','fontSize':'10px','display':'block'}),
+        html.Small("EDA — TRIBU ALIMENTOS SALUDABLES PARA MASCOTAS SAS", style={'color':'#475569','fontSize':'9px','display':'block','marginTop':'1px'}),
     ], style={'marginBottom':'24px'}),
     html.Label("Ciudad", style={'fontWeight':'600','fontSize':'11px','color':'#94A3B8','textTransform':'uppercase','letterSpacing':'.5px'}),
     dcc.Dropdown(id='filter-ciudad', options=[{'label':c,'value':c} for c in ALL_CITIES],
@@ -229,8 +230,9 @@ tabs = dcc.Tabs(id='main-tabs', value='tab-resumen', children=[
 
 app.layout = html.Div([
     html.Div([
-        html.Span("MACROMAKERS"),
-        html.Span("Talento Tech IA — Nivel Explorador", style={'fontSize':'11px','fontWeight':'400','color':'#94A3B8','marginLeft':'10px','letterSpacing':'0.5px'}),
+        html.Div("MACROMAKERS", style={'fontWeight':'800','letterSpacing':'2px'}),
+        html.Div("Talento Tech IA — Nivel Explorador", style={'fontSize':'10px','fontWeight':'400','color':'#94A3B8'}),
+        html.Div("EDA — TRIBU ALIMENTOS SALUDABLES PARA MASCOTAS SAS", style={'fontSize':'9px','fontWeight':'400','color':'#64748B','marginTop':'1px'}),
     ], className='mobile-topbar'),
     sidebar,
     html.Div([
@@ -325,6 +327,7 @@ def tab_resumen(d, da):
             'fontWeight':'800','letterSpacing':'3px','color':COLORS['text'],
             'marginBottom':'2px','fontSize':'clamp(20px, 4vw, 32px)',
         }),
+        html.Div("TRIBU ALIMENTOS SALUDABLES PARA MASCOTAS SAS", style={'color':COLORS['muted'],'fontSize':'13px'}),
         html.Div("Análisis Exploratorio de Datos", style={'color':COLORS['muted'],'fontSize':'13px','marginBottom':'20px'}),
     ])
 
